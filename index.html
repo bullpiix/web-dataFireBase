@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Proyecto TypeScript</title>
+    <link rel="icon" href="./manuico.ico">
+</head>
+<body>
+    <h1>¡Hola Manuel Jose desde TypeScript!</h1>
+    <form id="formulario">
+        <input type="text" id="nombre" placeholder="Nombre" required />
+        <input type="number" id="edad" placeholder="Edad" required />
+        <button type="submit">Guardar</button>
+    </form>
+    <script type="module">
+        // Importar las funciones necesarias de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHVK_NPXmwBLVjqZIPfnCj7lC0DnERaTM",
+            authDomain: "carachama-c56ef.firebaseapp.com",
+            projectId: "carachama-c56ef",
+            storageBucket: "carachama-c56ef.firebasestorage.app",
+            messagingSenderId: "119909882751",
+            appId: "1:119909882751:web:e1730a6724041c54bc984a",
+            measurementId: "G-HL4G962F61"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Obtener el formulario y escuchar el evento de envío
+        const formulario = document.getElementById("formulario");
+
+        formulario.addEventListener("submit", (event) => {
+            event.preventDefault(); // Evitar que se recargue la página
+
+            // Obtener los valores del formulario
+            const nombre = document.getElementById("nombre").value;
+            const edad = parseInt(document.getElementById("edad").value, 10);
+
+            // Validar los datos
+            if (nombre && !isNaN(edad)) {
+                // Referencia en la base de datos
+                const referencia = ref(database, 'usuarios/' + nombre);
+
+                // Enviar los datos a Firebase
+                set(referencia, {
+                    nombre: nombre,
+                    edad: edad,
+                })
+                .then(() => {
+                    alert("Datos guardados correctamente.");
+                })
+                .catch((error) => {
+                    console.error("Error al guardar los datos:", error);
+                    alert("Hubo un error al guardar los datos.");
+                });
+            } else {
+                alert("Por favor, ingresa datos válidos.");
+            }
+        });
+    </script>
+</body>
+</html>
